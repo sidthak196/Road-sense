@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textAlignment="center"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:hint="Mobile Computing Lab"
+        android:id="@+id/FirstText" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:textAlignment="center"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:hint="Enter Value"
+        android:id="@+id/Text" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:id="@+id/xButton"
+        android:text="Submit"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/Text"
+
+        />
+</RelativeLayout>
+
+
+
+
