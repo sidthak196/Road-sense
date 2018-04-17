@@ -161,7 +161,7 @@ public class MainActivity extends Activity implements GoogleApiClient.Connection
         sensorManager.unregisterListener(gyroscopeListener);
     }
 
-    @Override
+    //    @Override
     public void onConnected(Bundle bundle) {
         Intent intent = new Intent(this, ActivityRecognizedService.class);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

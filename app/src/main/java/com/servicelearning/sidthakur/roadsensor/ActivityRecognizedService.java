@@ -37,7 +37,7 @@ public class ActivityRecognizedService extends IntentService {
     }
 
     private void handleDetectedActivities(List<DetectedActivity> probableActivities) {
-        final Intent intent = new Intent(this, SensorService.class);
+
         for (DetectedActivity activity : probableActivities) {
             switch (activity.getType()) {
                 case DetectedActivity.IN_VEHICLE: {
@@ -45,9 +45,12 @@ public class ActivityRecognizedService extends IntentService {
                     Log.e("ActivityRecogition", "In Vehicle: " + activity.getConfidence());
                     if (activity.getConfidence() > 75) {
                         Toast.makeText(getBaseContext(), "In Vehicle", Toast.LENGTH_LONG).show();
-
-                        startService(intent);
+                        startSensorService();
                     }
+                    break;
+                }
+                case DetectedActivity.ON_BICYCLE: {
+
                     break;
                 }
                 case DetectedActivity.UNKNOWN: {
@@ -58,7 +61,7 @@ public class ActivityRecognizedService extends IntentService {
                     Log.e("ActivityRecogition", activity.getType() + ":" + activity.getConfidence());
                     if (activity.getConfidence() > 75) {
 
-                        stopService(intent);
+                        stopSensorService();
                     }
                     break;
 
@@ -66,4 +69,13 @@ public class ActivityRecognizedService extends IntentService {
         }
     }
 
+    private void startSensorService() {
+        final Intent intent = new Intent(this, SensorService.class);
+        startService(intent);
+    }
+
+    private void stopSensorService() {
+        final Intent intent = new Intent(this, SensorService.class);
+        stopService(intent);
+    }
 }

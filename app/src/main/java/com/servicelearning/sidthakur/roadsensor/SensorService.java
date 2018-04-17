@@ -47,7 +47,7 @@ public class SensorService extends Service implements SensorEventListener, Locat
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        sensorManager.registerListener(this, gyroscopesensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager.registerListener(this, gyroscopesensor, SensorManager.SENSOR_DELAY_GAME);
         // sensorManager.registerListener(this,accelerometer,SensorManager.SENSOR_DELAY_NORMAL);
         mapData = MapData.getInstance();
         dataObj = new MainData();
@@ -100,6 +100,7 @@ public class SensorService extends Service implements SensorEventListener, Locat
                 dataObj.setGyroZ(event.values[2]);
                 dataObj.setDeltaBump(difference);
                 lastUpdate = event.values[2];
+                //// TODO: 4/17/2018  check if the data agrees with the agent
                 locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
 
             }
