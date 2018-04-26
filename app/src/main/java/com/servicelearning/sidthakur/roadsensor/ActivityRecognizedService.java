@@ -3,7 +3,6 @@ package com.servicelearning.sidthakur.roadsensor;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
@@ -19,8 +18,11 @@ import java.util.List;
  */
 public class ActivityRecognizedService extends IntentService {
 
+    DefValues currValues;
     public ActivityRecognizedService() {
+
         super("ActivityRecognizedService");
+        currValues = DefValues.getInstance();
     }
 
     @Override
@@ -44,13 +46,16 @@ public class ActivityRecognizedService extends IntentService {
 
                     Log.e("ActivityRecogition", "In Vehicle: " + activity.getConfidence());
                     if (activity.getConfidence() > 75) {
-                        Toast.makeText(getBaseContext(), "In Vehicle", Toast.LENGTH_LONG).show();
+                        currValues.setMode(0);
+                        //Toast.makeText(getBaseContext(), "In Vehicle", Toast.LENGTH_LONG).show();
                         startSensorService();
                     }
                     break;
                 }
                 case DetectedActivity.ON_BICYCLE: {
-
+                    if (activity.getConfidence() > 75) {
+                        currValues.setMode(1);
+                    }
                     break;
                 }
                 case DetectedActivity.UNKNOWN: {

@@ -39,10 +39,12 @@ public class SensorService extends Service implements SensorEventListener, Locat
     MapData mapData;
     MainData dataObj;
     LocationManager locationManager;
+    ReactiveAgent agent;
 
     private double lastUpdate = 0;
 
     public SensorService() {
+        agent = new ReactiveAgent();
     }
 
     @Override
@@ -100,6 +102,7 @@ public class SensorService extends Service implements SensorEventListener, Locat
                 dataObj.setGyroZ(event.values[2]);
                 dataObj.setDeltaBump(difference);
                 lastUpdate = event.values[2];
+                Boolean shouldsend = agent.checkValidity(dataObj);
                 //// TODO: 4/17/2018  check if the data agrees with the agent
                 locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
 
