@@ -29,7 +29,7 @@ import java.util.Iterator;
 
 public class SensorService extends Service implements SensorEventListener, LocationListener {
 
-    private static final double DELTHRESHOLD = 0.3;
+    private static final double DELTHRESHOLD = 0.2;
 
 
     //class variables
@@ -40,6 +40,7 @@ public class SensorService extends Service implements SensorEventListener, Locat
     MainData dataObj;
     LocationManager locationManager;
     ReactiveAgent agent;
+    Context context;
 
     private double lastUpdate = 0;
 
@@ -53,6 +54,7 @@ public class SensorService extends Service implements SensorEventListener, Locat
         // sensorManager.registerListener(this,accelerometer,SensorManager.SENSOR_DELAY_NORMAL);
         mapData = MapData.getInstance();
         dataObj = new MainData();
+        context = this;
         locationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         return START_STICKY;
 
@@ -100,7 +102,7 @@ public class SensorService extends Service implements SensorEventListener, Locat
                 dataObj.setGyroX(event.values[0]);
                 dataObj.setGyroY(event.values[1]);
                 dataObj.setGyroZ(event.values[2]);
-                dataObj.setDeltaBump(difference);
+
                 lastUpdate = event.values[2];
                 Boolean shouldsend = agent.checkValidity(dataObj);
                 //// TODO: 4/17/2018  check if the data agrees with the agent
@@ -164,8 +166,6 @@ public class SensorService extends Service implements SensorEventListener, Locat
                 postDataParams.put("GyroX", data.getGyroX());
                 postDataParams.put("GyroY", data.getGyroY());
                 postDataParams.put("GyroZ", data.getGyroZ());
-                postDataParams.put("DeltaBump", data.getDeltaBump());
-
                 Log.e("params", postDataParams.toString());
 
                 conn = (HttpURLConnection) url.openConnection();
@@ -176,8 +176,7 @@ public class SensorService extends Service implements SensorEventListener, Locat
                 conn.setDoOutput(true);
 
                 OutputStream os = conn.getOutputStream();
-                BufferedWriter writer = new BufferedWriter(
-                        new OutputStreamWriter(os, "UTF-8"));
+                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
                 writer.write(getPostDataString(postDataParams));
 
                 writer.flush();
@@ -187,6 +186,9 @@ public class SensorService extends Service implements SensorEventListener, Locat
                 //write to file
                 int result = WriteToFile.appendToFile(postDataParams.toString());
                 int responseCode = conn.getResponseCode();
+                if (result == 2) {
+                    agent.analyzeRoad(context);
+                }
                 return Integer.toString(responseCode);
             } catch (Exception e) {
                 return new String("Exception: " + e.getMessage());
